@@ -43,7 +43,11 @@ const create = async () => {
     repo,
     ref,
     auto_merge: false,
-    required_contexts: []
+    required_contexts: [],
+    payload: JSON.stringify({
+      ref,
+      tag
+    })
   });
 
   // update matching release
@@ -53,7 +57,7 @@ const create = async () => {
       repo,
       tag
     },
-    `https://deploy.emeabridge.eu/${owner}/${repo}/${deployment.id}/${tag}`
+    `https://deploy.emeabridge.eu/${owner}/${repo}/${deployment.id}`
   );
 };
 
