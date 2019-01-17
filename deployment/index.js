@@ -47,7 +47,8 @@ const create = async () => {
     payload: JSON.stringify({
       ref,
       tag
-    })
+    }),
+    description: `Production deploy for tag ${tag}`
   });
 
   // update matching release
