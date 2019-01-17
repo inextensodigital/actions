@@ -1,4 +1,5 @@
 const octokit = require("@octokit/rest")();
+const { writeFileSync } = require("fs")();
 
 octokit.authenticate({
   type: "token",
@@ -50,6 +51,12 @@ const create = async () => {
     }),
     description: `Production deploy for tag ${tag}`
   });
+
+  //save deployment for future actions
+  writeFileSync(
+    `${process.env.HOME}/deployment.json`,
+    JSON.stringify(deployment)
+  );
 
   // update matching release
   await addDeployButton(
