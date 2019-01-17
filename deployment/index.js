@@ -25,12 +25,11 @@ const create = async () => {
 
   try {
     const result = await octokit.repos.getReleaseByTag({ owner, repo, tag });
+    console.log(result);
   } catch (e) {
     console.error(`Release with tag ${tag} not found on ${owner}/${repo}`);
     process.exit(1);
   }
-
-  console.log(result);
 };
 console.log(process.env);
 if (process.argv[2] === "create") {
