@@ -1,5 +1,5 @@
 const octokit = require("@octokit/rest")();
-const { writeFileSync } = require("fs")();
+const { writeFileSync, readFileSync } = require("fs")();
 
 octokit.authenticate({
   type: "token",
@@ -71,4 +71,9 @@ const create = async () => {
 
 if (process.argv[2] === "create") {
   create();
+}
+
+if (process.argv[2] === "log") {
+  console.log(process.env);
+  console.log(readFileSync(`/github/workflow/event.json`, "utf8"));
 }
