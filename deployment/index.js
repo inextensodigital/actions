@@ -9,7 +9,7 @@ const create = async () => {
   const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
   const ref = process.env.GITHUB_SHA;
 
-  const deployment = await octokit.repos.createDeployment({
+  const { data: deployment } = await octokit.repos.createDeployment({
     owner,
     repo,
     ref,
