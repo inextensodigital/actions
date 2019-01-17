@@ -13,7 +13,8 @@ const create = async () => {
     owner,
     repo,
     ref,
-    auto_merge: false
+    auto_merge: false,
+    required_contexts: []
   });
 
   const result = await octokit.repos.createDeploymentStatus({
