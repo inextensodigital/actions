@@ -1,7 +1,8 @@
 const octokit = require("@octokit/rest")();
 
 const create = async () => {
-  const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/", 2);
+  const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
+  const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
   const ref = process.env.GITHUB_SHA;
 
   const deployment = await octokit.repos.createDeployment({
