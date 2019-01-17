@@ -1,5 +1,9 @@
 const octokit = require("@octokit/rest")();
 
+octokit.authenticate({
+  type: "token",
+  token: process.env.GITHUB_TOKEN
+});
 const create = async () => {
   const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
   const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
