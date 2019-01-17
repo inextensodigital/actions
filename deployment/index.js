@@ -5,7 +5,7 @@ octokit.authenticate({
   token: process.env.GITHUB_TOKEN
 });
 const create = async () => {
-  const tag = process.env.GITHUB_REF.split("/")[2];
+  const tag = "asimplerelease2"; //process.env.GITHUB_REF.split("/")[2];
   const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
   const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
   const ref = process.env.GITHUB_SHA;
@@ -23,7 +23,13 @@ const create = async () => {
 
   // update matching release
 
-  const result = await octokit.repos.getReleaseByTag({ owner, repo, tag });
+  try {
+    const result = await octokit.repos.getReleaseByTag({ owner, repo, tag });
+  } catch (e) {
+    console.error(`Release with tag ${tag} not found on ${owner}/${repo}`);
+    process.exit(1);
+  }
+
   console.log(result);
 };
 console.log(process.env);
