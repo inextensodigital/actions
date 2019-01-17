@@ -23,35 +23,32 @@ const create = async () => {
 
   // update matching release
 
-  try {
-    const { data: release } = await octokit.repos.getReleaseByTag({
-      owner,
-      repo,
-      tag
-    });
+  const { data: release } = await octokit.repos.getReleaseByTag({
+    owner,
+    repo,
+    tag
+  });
 
-    const result = await octokit.repos.updateRelease({
-      owner,
-      repo,
-      release_id: release.id,
-      body: `${body}
+  const result = await octokit.repos.updateRelease({
+    owner,
+    repo,
+    release_id: release.id,
+    body: `${body}
         <!-- DEPLOY_BEGIN -->
 ## Deploy to production
 
 [:fire: Deploy!](https://deploy.emeabridge.eu/${owner}/${repo}/${
-        deployment.id
-      }/${release.id})
+      deployment.id
+    }/${release.id})
 <!-- DEPLOY_END -->
       `
-    });
+  });
 
-    console.log(result);
-  } catch (e) {
-    console.error(`Release with tag ${tag} not found on ${owner}/${repo}`);
-    process.exit(1);
-  }
+  console.log(result);
 };
 console.log(process.env);
 if (process.argv[2] === "create") {
-  create();
+  create().then(null, (...args) => {
+    console.error(args);
+  });
 }
