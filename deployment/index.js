@@ -31,7 +31,7 @@ const addDeployButton = async ({ owner, repo, tag }, url) => {
   }
 };
 const create = async () => {
-  const tag = "asimplerelease2"; //process.env.GITHUB_REF.split("/")[2];
+  const tag = process.env.GITHUB_REF.split("/")[2];
   const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
   const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
   const ref = process.env.GITHUB_SHA;
