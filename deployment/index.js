@@ -1,5 +1,5 @@
 const octokit = require("@octokit/rest")();
-const { writeFileSync, readFileSync } = require("fs")();
+const { writeFileSync, readFileSync } = require("fs");
 
 octokit.authenticate({
   type: "token",
