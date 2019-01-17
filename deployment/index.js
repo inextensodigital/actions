@@ -1,7 +1,6 @@
 const octokit = require("@octokit/rest")();
 
 const create = async () => {
-  console.log(process.env);
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/", 2);
   const ref = process.env.GITHUB_SHA;
 
@@ -19,7 +18,7 @@ const create = async () => {
     state: "pending"
   });
 };
-
+console.log(process.env);
 if (process.argv[2] === "create") {
   create();
 }
