@@ -5,10 +5,12 @@ octokit.authenticate({
   token: process.env.GITHUB_TOKEN
 });
 const create = async () => {
+  const tag = process.env.GITHUB_REF.split("/")[2];
   const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
   const repo = process.env.GITHUB_REPOSITORY.substring(owner.length + 1);
   const ref = process.env.GITHUB_SHA;
 
+  // create deployment
   const { data: deployment } = await octokit.repos.createDeployment({
     owner,
     repo,
@@ -19,15 +21,10 @@ const create = async () => {
 
   console.log(deployment);
 
-  const result = await octokit.repos.createDeploymentStatus({
-    owner,
-    repo,
-    deployment_id: deployment.id,
-    state: "pending",
-    log_url: `https://deployment.emeabridge.eu/${owner}/${repo}/${
-      deployment.id
-    }`
-  });
+  // update matching release
+
+  const result = await octokit.repos.getReleaseByTag({ owner, repo, tag });
+  console.log(result);
 };
 console.log(process.env);
 if (process.argv[2] === "create") {
