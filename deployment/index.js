@@ -34,14 +34,13 @@ const create = async () => {
       repo,
       release_id: release.id,
       body: `${release.body}
-        <!-- DEPLOY_BEGIN -->
+<!-- DEPLOY_BEGIN -->
 ## Deploy to production
 
-[:fire: Deploy!](https://deploy.emeabridge.eu/${owner}/${repo}/${
+[![Deploy to prod](https://img.shields.io/badge/Deploy%20to-Production-blue.svg?style=for-the-badge)](https://deploy.emeabridge.eu/${owner}/${repo}/${
         deployment.id
       }/${release.id})
-<!-- DEPLOY_END -->
-      `
+<!-- DEPLOY_END -->`
     });
 
     console.log(result);
