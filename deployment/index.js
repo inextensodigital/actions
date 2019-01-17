@@ -18,6 +18,16 @@ const create = async () => {
   });
 
   console.log(deployment);
+
+  const result = await octokit.repos.createDeploymentStatus({
+    owner,
+    repo,
+    deployment_id: deployment.id,
+    state: "pending",
+    log_url: `https://deployment.emeabridge.eu/${owner}/${repo}/${
+      deployment.id
+    }`
+  });
 };
 console.log(process.env);
 if (process.argv[2] === "create") {
