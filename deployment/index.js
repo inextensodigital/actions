@@ -21,7 +21,7 @@ const addDeployButton = async ({ owner, repo, tag }, url) => {
 <!-- DEPLOY_BEGIN -->
 ## Deploy to production
 
-[![Deploy to prod](https://img.shields.io/badge/Deploy%20to-Production-blue.svg?style=for-the-badge)](${url})
+[![Deploy to prod](https://img.shields.io/badge/Deploy%20to-Production-orange.svg?style=for-the-badge)](${url})
 <!-- DEPLOY_END -->`
     });
 
@@ -30,6 +30,7 @@ const addDeployButton = async ({ owner, repo, tag }, url) => {
     console.error(`Release with tag ${tag} not found for ${owner}/${repo}`);
   }
 };
+
 const create = async () => {
   const tag = process.env.GITHUB_REF.split("/")[2];
   const owner = process.env.GITHUB_REPOSITORY.split("/", 1)[0];
