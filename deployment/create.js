@@ -1,8 +1,5 @@
 const { ref, refName, context } = require("./tools");
-const _api = require("./api");
-
-const octokit = context.octokit();
-const api = _api(octokit);
+const api = require("./api");
 
 module.exports = async () => {
   const deploy = await api.createDeploymentFromRef({
