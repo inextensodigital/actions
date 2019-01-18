@@ -1,6 +1,14 @@
 const { owner, repo, ref, refName, context } = require("./tools");
 const api = require("./api");
 
+const encodeData = data => {
+  return Object.keys(data)
+    .map(function(key) {
+      return [key, data[key]].map(encodeURIComponent).join("=");
+    })
+    .join("&");
+};
+
 module.exports = async () => {
   const deploy = await api.createDeploymentFromRef({
     auto_merge: false,
@@ -13,7 +21,12 @@ module.exports = async () => {
   });
 
   await context.writeJSON("deployment", deploy);
-  const url = `https://deploy.emeabridge.eu/${owner}/${repo}/${deploy.id}`;
+  const url = `https://auto-deploy.inextenso.io/deploy?${encodeData({
+    owner,
+    repo,
+    deploy: deploy.id,
+    sign: "generated_sign"
+  })}`;
   await api.appendToReleaseBody(
     refName,
     `## Deploy to production :rocket:
