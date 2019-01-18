@@ -13,6 +13,19 @@ const api = {
 
     return deployment;
   },
+  createDeploymentStatus: async (deploy, state) => {
+    const { data: stats } = await octokit.repos.createDeploymentStatus({
+      owner,
+      repo,
+      deployment_id: deploy,
+      state,
+      headers: {
+        accept: "application/vnd.github.flash-preview+json"
+      }
+    });
+
+    return stats;
+  },
   getReleaseByTag: async tag => {
     const { data: release } = await kit.repos.getReleaseByTag({
       owner,
