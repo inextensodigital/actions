@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const { owner, repo, ref, refName, context } = require("./tools");
 const api = require("./api");
 
@@ -21,11 +23,15 @@ module.exports = async () => {
   });
 
   await context.writeJSON("deployment", deploy);
+
+  const sign = crypto.createSign("RSA-SHA256");
+  sign.update(owner + repo + deploy.id);
+
   const url = `https://auto-deploy.inextenso.io/deploy?${encodeData({
     owner,
     repo,
     deploy: deploy.id,
-    sign: "generated_sign"
+    sign: sign.sign(process.env.PRIVATE_KEY, "hex")
   })}`;
   await api.appendToReleaseBody(
     refName,
