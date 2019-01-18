@@ -2,7 +2,7 @@
 workflow "Prepare production deploy" {
   on = "release"
   resolves = [
-    "Create deployment & update release",
+    "Prepare deploy Notification",
   ]
 }
 
@@ -34,10 +34,16 @@ action "Create deployment & update release" {
   args = "create"
 }
 
+action "Prepare deploy Notification" {
+  needs = "Create deployment & update release"
+  uses = "apex/actions/slack@master"
+  secrets = ["SLACK_WEBHOOK_URL"]
+}
+
 # after check !
 workflow "Production deploy" {
   on = "deployment_status"
-  resolves = ["Update deployment"]
+  resolves = ["Deploy Notification"]
 }
 
 action "Filter in progress deployment" {
@@ -57,4 +63,10 @@ action "Update deployment" {
   needs = ["Deploy to prod"]
   args = "update_deployment success"
   secrets = ["GITHUB_TOKEN"]
+}
+
+action "Deploy Notification" {
+  needs = "Update deployment"
+  uses = "apex/actions/slack@master"
+  secrets = ["SLACK_WEBHOOK_URL"]
 }
