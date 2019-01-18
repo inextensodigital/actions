@@ -16,7 +16,7 @@ module.exports = async () => {
   const url = `https://deploy.emeabridge.eu/${owner}/${repo}/${deploy.id}`;
   await api.appendToReleaseBody(
     refName,
-    `## Deploy to production
+    `## Deploy to production :rocket:
 
 [![Deploy to prod](https://img.shields.io/badge/Deploy%20to-Production-orange.svg?style=for-the-badge)](${url})`
   );
