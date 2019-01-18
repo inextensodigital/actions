@@ -1,4 +1,4 @@
-const { ref, refName, context } = require("./tools");
+const { owner, repo, ref, refName, context } = require("./tools");
 const api = require("./api");
 
 module.exports = async () => {
