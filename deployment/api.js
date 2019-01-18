@@ -12,17 +12,17 @@ module.exports = kit => {
 
       return deployment;
     },
-    getReleaseByTag: async (tag) => {
+    getReleaseByTag: async tag => {
       const { data: release } = await kit.repos.getReleaseByTag({
         owner,
         repo,
         tag
-      })
+      });
 
-      return release
-    }
-    appendToReleaseBody: async (tag, contents, mark = 'DEPLOY') => {
-      const release = await api.getReleaseByTag(tag)
+      return release;
+    },
+    appendToReleaseBody: async (tag, contents, mark = "DEPLOY") => {
+      const release = await api.getReleaseByTag(tag);
 
       const result = await kit.repos.updateRelease({
         owner,
@@ -33,7 +33,7 @@ ${contents}
 <!-- ${mark}_END -->`
       });
 
-      return true
+      return true;
     }
   };
 
