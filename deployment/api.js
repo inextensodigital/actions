@@ -14,7 +14,7 @@ const api = {
     return deployment;
   },
   createDeploymentStatus: async (deploy, state) => {
-    const { data: stats } = await octokit.repos.createDeploymentStatus({
+    const { data: stats } = await kit.repos.createDeploymentStatus({
       owner,
       repo,
       deployment_id: deploy,
