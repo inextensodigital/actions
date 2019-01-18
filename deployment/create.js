@@ -16,7 +16,7 @@ module.exports = async () => {
   });
 
   await context.writeJSON("deployment", deploy);
-  const url = `https://deploy.emeabridge.eu/${owner}/${repo}/${deployment.id}`;
+  const url = `https://deploy.emeabridge.eu/${owner}/${repo}/${deploy.id}`;
   await api.appendToReleaseBody(
     refName,
     `## Deploy to production
