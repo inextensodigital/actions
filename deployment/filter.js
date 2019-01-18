@@ -14,5 +14,5 @@ module.exports = async () => {
       break;
   }
 
-  process.exit(pass ? 0 : 1);
+  process.exit(pass ? 0 : 78);
 };
