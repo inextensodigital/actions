@@ -39,6 +39,6 @@ module.exports = {
     readJSON: async name =>
       JSON.parse(await readFile(`${home}/${name}.json`, "utf8")),
     readEvent: async () => JSON.parse(await readFile(eventPath, "utf8")),
-    slackMessage: obj => writeFile(`${home}/slack.json`, JSON.stringify(obj))
+    slackMessage: obj => writeFile(`./slack.json`, JSON.stringify(obj))
   }
 };
