@@ -1,3 +1,7 @@
 const func = require(`./${process.argv[2]}`);
-
-func();
+try {
+  func();
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}
