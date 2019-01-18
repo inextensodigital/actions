@@ -1,6 +1,6 @@
 const { owner, repo, ref } = require("./tools");
 
-export default kit => {
+module.exports = kit => {
   const api = {
     createDeploymentFromRef: async add => {
       const { data: deployment } = await kit.repos.createDeployment({

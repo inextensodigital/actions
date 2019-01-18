@@ -4,7 +4,7 @@ const _api = require("./api");
 const octokit = context.octokit();
 const api = _api(octokit);
 
-export default async () => {
+module.exports = async () => {
   const deploy = await api.createDeploymentFromRef({
     auto_merge: false,
     required_contexts: [],

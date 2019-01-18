@@ -13,7 +13,7 @@ const token = process.env.GITHUB_TOKEN;
 const eventPath = process.env.GITHUB_EVENT_PATH;
 const home = process.env.HOME;
 
-export default {
+module.exports = {
   owner,
   repo,
   ref,
