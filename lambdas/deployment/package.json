@@ -1,0 +1,14 @@
+{
+  "name": "deployment",
+  "private": true,
+  "devDependencies": {
+    "serverless": "^1.36.1",
+    "serverless-domain-manager": "^2.6.11"
+  },
+  "scripts": {
+    "deploy": "sls create_domain --stage prod && sls deploy --stage prod"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.10.0"
+  }
+}

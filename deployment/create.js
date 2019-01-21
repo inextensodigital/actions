@@ -25,12 +25,13 @@ module.exports = async () => {
   await context.writeJSON("deployment", deploy);
 
   const sign = crypto.createSign("RSA-SHA256");
-  sign.update(owner + repo + deploy.id);
+  sign.update(owner + repo + deploy.id + refName);
 
   const url = `https://auto-deploy.inextenso.io/deploy?${encodeData({
     owner,
     repo,
     deploy: deploy.id,
+    tag: refName,
     sign: sign.sign(process.env.PRIVATE_KEY, "hex")
   })}`;
   await api.appendToReleaseBody(

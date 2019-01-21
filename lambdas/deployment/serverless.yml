@@ -1,0 +1,37 @@
+service: deployment
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+  stage: prod
+  profile: default
+  region: eu-central-1
+
+functions:
+  confirm:
+    handler: handler.confirm
+    environment:
+      GITHUB_TOKEN: ${ssm:githubToken}
+      PUBLIC_KEY: ${ssm:deployPublicKey}
+    events:
+      - http:
+          path: /confirm
+          method: GET
+  deploy:
+    handler: handler.deploy
+    events:
+      - http:
+          path: /deploy
+          method: GET
+
+custom:
+  customDomain:
+    domainName: auto-deploy.inextenso.io
+    stage: ${self:provider.stage}
+    certificateArn: arn:aws:acm:us-east-1:285715278780:certificate/900d6e06-958f-40f3-b627-76cd4d3a7152
+    createRoute53Record: true
+    endpointType: 'edge'
+
+plugins:
+  - serverless-domain-manager

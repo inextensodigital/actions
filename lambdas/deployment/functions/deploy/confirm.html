@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.jquery-az.com/javascript/alert/dist/sweetalert.min.js"></script>
+  <link rel="stylesheet" href="https://www.jquery-az.com/javascript/alert/dist/sweetalert.css">
+</head>
+<body onload="JSconfirm()">
+<script type="text/javascript">
+function JSconfirm(){
+	swal({ 
+        title: "Deploy ?!",   
+        text: "Deploy __APP__ ?",   
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Yes, deploy it",   
+        cancelButtonText: "No, I want my Mommy",   
+        closeOnConfirm: false,   
+        closeOnCancel: false }, 
+        function(isConfirm) {   
+            if (isConfirm) 
+            {   
+                window.location = "__LINK__";   
+            } 
+            else {     
+                swal({ 
+                    title: "Not deployed!",
+                    type: "success",
+                }, function() {
+                    window.location = "__BACK_LINK__";   
+                });   
+            } 
+        }
+    );
+}
+</script>
+</body>
+</html>
