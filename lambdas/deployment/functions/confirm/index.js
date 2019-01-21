@@ -1,10 +1,12 @@
 const crypto = require("crypto");
 const octokit = require("@octokit/rest")();
+const { readFileSync } = require("fs");
+const template = readFileSync("./functions/confirm/ok.html", "utf8");
 
 module.exports = async ({ queryStringParameters }, context, callback) => {
   if (queryStringParameters) {
     const { owner, repo, deploy, tag, sign } = queryStringParameters;
-    if (owner && repo && deploy && sign) {
+    if (owner && repo && deploy && sign && tag) {
       const verify = crypto.createVerify("SHA256");
       verify.update(owner + repo + deploy + tag);
 
@@ -28,7 +30,13 @@ module.exports = async ({ queryStringParameters }, context, callback) => {
 
         callback(null, {
           statusCode: 200,
-          body: "🚀"
+          headers: {
+            "Content-Type": "text/html; charset=utf-8"
+          },
+          body: template.replace(
+            "__LINK__",
+            `https://github.com/${owner}/${repo}/deployments`
+          )
         });
         return;
       }
