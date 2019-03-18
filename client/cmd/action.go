@@ -7,6 +7,7 @@ import (
 	"github.com/inextensodigital/actions/client/parser"
 	"github.com/inextensodigital/actions/client/printer"
 	"github.com/spf13/cobra"
+	// "reflect"
 )
 
 var Filter string
@@ -36,27 +37,45 @@ var actionLsCmd = &cobra.Command{
 	},
 }
 
-var actionCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create new action",
+var actionRenameCmd = &cobra.Command{
+	Use:   "rename",
+	Short: "Rename actions",
+	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		conf := parser.LoadData()
+		for _, action := range conf.Actions {
+			if args[0] == action.Identifier {
+				action.Identifier = args[1]
+			}
+		}
 
-		u := model.UsesDockerImage{Image: "github.com/actions/workflow-parser"}
-		uh := &u
-		ghaction := model.Action{Identifier: "nouvelle action", Uses: uh}
-
-		fmt.Println("action called %v", ghaction)
-		content, _ := printer.Encode(ghaction)
-
-		printer.Write(content, "/tmp/test.workflow")
+		content, _ := printer.Encode(conf)
+		printer.Write(content)
 	},
 }
 
-var actionAddCmd = &cobra.Command{
-	Use:   "add",
-	Short: "A brief description of your command",
+var actionCreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create new action",
+	Args:  cobra.MinimumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("action called")
+		u := model.UsesDockerImage{Image: args[1]}
+		uh := &u
+
+		env := make(map[string]string)
+		env[args[2]] = args[2]
+
+		ghaction := model.Action{Identifier: args[0], Uses: uh, Env: env}
+
+		if len(args) == 4 {
+			ghaction.Secrets[0] = args[3]
+		}
+
+		conf := parser.LoadData()
+		conf.Actions = append(conf.Actions, &ghaction)
+
+		content, _ := printer.Encode(conf)
+		printer.Write(content)
 	},
 }
 
@@ -65,7 +84,7 @@ func init() {
 
 	actionCmd.AddCommand(actionLsCmd)
 	actionCmd.AddCommand(actionCreateCmd)
-	actionCmd.AddCommand(actionAddCmd)
+	actionCmd.AddCommand(actionRenameCmd)
 
 	rootCmd.AddCommand(actionCmd)
 }

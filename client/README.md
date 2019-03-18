@@ -3,19 +3,19 @@
 
 ```
 
-github_workflow initialize
-github_workflow workflow ls [name] --filter='on=="pull_request"'
-github_workflow workflow create <name> <on> --action=
-github_workflow workflow add <name> --action=
-# github_workflow workflow rename <old> <new>
-# github_workflow workflow rm <name> --actions=true|false
-# github_workflow workflow merge <name> --filter=
+- [ ] github_workflow initialize
+- [x] github_workflow workflow ls [name] --filter='on=="pull_request"'
+- [x] github_workflow workflow create <name> <on> --action=
+- [x] github_workflow workflow add <name> --action=
+- [x] # github_workflow workflow rename <old> <new>
+- [ ] # github_workflow workflow rm <name> --actions=true|false
+- [ ] # github_workflow workflow merge <name> --filter=
 
-github_workflow action ls [name] --filter=""
-github_workflow action create <name> <uses> --env= # --secrets
-# github_workflow action rename <old> <new>
-# github_workflow action rm <name>
-# github_workflow lint
+- [x] github_workflow action ls [name] --filter=""
+- [x] github_workflow action create <name> <uses> --env= # --secrets
+- [x] # github_workflow action rename <old> <new>
+- [ ] # github_workflow action rm <name>
+- [ ] # github_workflow lint
 
 
 
