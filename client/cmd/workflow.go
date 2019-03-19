@@ -50,7 +50,7 @@ var workflowCreateCmd = &cobra.Command{
 		w.Resolves = resolve
 
 		conf := parser.LoadData()
-		conf.Actions = append(conf.Actions, &ghaction)
+		conf.Workflows = append(conf.Workflows, &w)
 
 		content, _ := printer.Encode(conf)
 		printer.Write(content)

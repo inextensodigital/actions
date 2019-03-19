@@ -14,9 +14,10 @@ type ConfigurationPrinter struct {
 }
 
 type ActionPrinter struct {
-	Identifier string     `hcl:",key"`
-	Uses       model.Uses `hcl:"uses"`
-	Runs, Args model.Command
+	Identifier string            `hcl:",key"`
+	Uses       string            `hcl:"uses"`
+	Runs       []string          `hcl:"runs"`
+	Args       []string          `hcl:"args"`
 	Needs      []string          `hcl:"needs"`
 	Env        map[string]string `hcl:"env"`
 	Secrets    []string          `hcl:"secrets"`
@@ -30,19 +31,28 @@ type WorkflowPrinter struct {
 
 // func Encode(in interface{}) ([]byte, error) {
 func Encode(in *model.Configuration) ([]byte, error) {
-
 	cp := ConfigurationPrinter{}
 
 	for _, action := range in.Actions {
+		var runs []string
+		var args []string
+		if action.Runs != nil {
+			runs = action.Runs.Split()
+		}
+		if action.Runs != nil {
+			args = action.Args.Split()
+		}
+
 		ap := ActionPrinter{
 			Identifier: action.Identifier,
-			Uses:       action.Uses,
-			Runs:       action.Runs,
-			Args:       action.Args,
+			Uses:       action.Uses.String(),
+			Runs:       runs,
+			Args:       args,
 			Needs:      action.Needs,
 			Env:        action.Env,
 			Secrets:    action.Secrets,
 		}
+
 		cp.Actions = append(cp.Actions, &ap)
 	}
 

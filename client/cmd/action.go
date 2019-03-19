@@ -7,7 +7,6 @@ import (
 	"github.com/inextensodigital/actions/client/parser"
 	"github.com/inextensodigital/actions/client/printer"
 	"github.com/spf13/cobra"
-	// "reflect"
 )
 
 var Filter string
@@ -79,12 +78,61 @@ var actionCreateCmd = &cobra.Command{
 	},
 }
 
+func removeAction(slice []*model.Action, s int) []*model.Action {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+func removeResolver(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+var actionRemoveCmd = &cobra.Command{
+	Use:   "rm",
+	Short: "Remove actions",
+	Args:  cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		conf := parser.LoadData()
+
+		var ia int
+		for k, action := range conf.Actions {
+			if action.Identifier == args[0] {
+				ia = k
+			}
+		}
+
+		listAction := removeAction(conf.Actions, ia)
+
+		conf.Actions = listAction
+		content, _ := printer.Encode(conf)
+		printer.Write(content)
+
+		listWorkflow := make([]*model.Workflow, 0)
+		for _, workflow := range conf.Workflows {
+			for kr, resolver := range workflow.Resolves {
+				if resolver == args[0] {
+					workflow.Resolves = removeResolver(workflow.Resolves, kr)
+				}
+			}
+			listWorkflow = append(listWorkflow, workflow)
+		}
+
+		conf.Workflows = listWorkflow
+		for _, workflow := range conf.Workflows {
+			fmt.Printf("%s\n", workflow.Resolves)
+		}
+
+		content, _ = printer.Encode(conf)
+		printer.Write(content)
+	},
+}
+
 func init() {
 	actionLsCmd.Flags().StringVarP(&Filter, "filter", "f", "", "Filter on")
 
 	actionCmd.AddCommand(actionLsCmd)
 	actionCmd.AddCommand(actionCreateCmd)
 	actionCmd.AddCommand(actionRenameCmd)
+	actionCmd.AddCommand(actionRemoveCmd)
 
 	rootCmd.AddCommand(actionCmd)
 }
