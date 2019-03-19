@@ -14,8 +14,8 @@
 - [x] github_workflow action ls [name] --filter=""
 - [x] github_workflow action create <name> <uses> --env= # --secrets
 - [x] # github_workflow action rename <old> <new>
-- [ ] # github_workflow action rm <name>
-- [ ] # github_workflow lint
+- [x] # github_workflow action rm <name>
+- [x] # github_workflow lint
 
 
 

@@ -15,7 +15,6 @@ var actionCmd = &cobra.Command{
 	Use:   "action",
 	Short: "Actions",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("action called")
 	},
 }
 
@@ -23,13 +22,12 @@ var actionLsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "List actions",
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, action := range parser.LoadData().Actions {
-			str := fmt.Sprintf("%s", action.Uses)
-			if len(args) >= 1 {
-				if args[0] == str {
-					fmt.Printf("%s\n", action.Identifier)
-				}
-			} else {
+		conf := parser.LoadData()
+		if len(args) >= 1 {
+			action := conf.GetAction(args[0])
+			fmt.Printf("%s\n", action.Identifier)
+		} else {
+			for _, action := range conf.Actions {
 				fmt.Printf("%s\n", action.Identifier)
 			}
 		}
@@ -38,7 +36,7 @@ var actionLsCmd = &cobra.Command{
 
 var actionRenameCmd = &cobra.Command{
 	Use:   "rename",
-	Short: "Rename actions",
+	Short: "Rename action",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		conf := parser.LoadData()
