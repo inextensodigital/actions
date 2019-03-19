@@ -74,7 +74,7 @@ func Encode(in *model.Configuration) ([]byte, error) {
 }
 
 func Write(c []byte) {
-	err := ioutil.WriteFile("/tmp/test.workflow", c, 0644)
+	err := ioutil.WriteFile(".github/main.workflow", c, 0644)
 	if err != nil {
 		panic(err)
 	}
