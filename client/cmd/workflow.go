@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/actions/workflow-parser/model"
 	"github.com/inextensodigital/actions/client/parser"
@@ -30,14 +31,21 @@ var workflowLsCmd = &cobra.Command{
 			workflows = parser.LoadData().GetWorkflows(Filter)
 		}
 
+		iW := 0
 		for _, workflow := range workflows {
 			if len(args) >= 1 {
 				if args[0] == workflow.Identifier {
 					fmt.Printf("%s\n", workflow.Identifier)
+					iW++
 				}
 			} else {
 				fmt.Printf("%s\n", workflow.Identifier)
+				iW++
 			}
+		}
+
+		if iW == 0 {
+			os.Exit(1)
 		}
 	},
 }
@@ -103,7 +111,6 @@ var workflowRenameCmd = &cobra.Command{
 func init() {
 	workflowLsCmd.Flags().StringVarP(&Filter, "filter", "f", "", "Filter on")
 	workflowAddCmd.Flags().StringVarP(&Action, "action", "a", "", "action")
-	// workflowAddCmd.MarkFlagRequired("action")
 
 	workflowCmd.AddCommand(workflowLsCmd)
 	workflowCmd.AddCommand(workflowAddCmd)

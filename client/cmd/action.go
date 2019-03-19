@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/actions/workflow-parser/model"
 	"github.com/inextensodigital/actions/client/parser"
@@ -22,14 +23,21 @@ var actionLsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		conf := parser.LoadData()
 
+		iA := 0
 		if len(args) >= 1 {
 			action := conf.GetAction(args[0])
 
 			fmt.Printf("%s\n", action.Identifier)
+			iA++
 		} else {
 			for _, action := range conf.Actions {
 				fmt.Printf("%s\n", action.Identifier)
+				iA++
 			}
+		}
+
+		if iA == 0 {
+			os.Exit(1)
 		}
 	},
 }
