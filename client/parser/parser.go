@@ -1,11 +1,12 @@
 package parser
 
 import (
-	"github.com/actions/workflow-parser/model"
-	ghparser "github.com/actions/workflow-parser/parser"
 	"io"
 	"log"
 	"os"
+
+	"github.com/actions/workflow-parser/model"
+	ghparser "github.com/actions/workflow-parser/parser"
 )
 
 func LoadData() *model.Configuration {
@@ -16,7 +17,10 @@ func LoadData() *model.Configuration {
 		log.Fatalln(err)
 	}
 
-	data, _ := ghparser.Parse(r)
+	data, err := ghparser.Parse(r)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	return data
 }
