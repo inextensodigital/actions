@@ -35,8 +35,6 @@ else
 fi
 ```
 
-
-Fixer arguments dans méthodes
 Plus de HELP et infos sur arguments
 Gestion code de sortie
 Rename workflow -> modifier resolve

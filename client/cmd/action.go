@@ -9,8 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Filter string
-
 var actionCmd = &cobra.Command{
 	Use:   "action",
 	Short: "Actions",
@@ -24,20 +22,14 @@ var actionLsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		conf := parser.LoadData()
 
-		listAction := make([]*model.Action, 0)
-
 		if len(args) >= 1 {
 			action := conf.GetAction(args[0])
 
-			listAction = append(listAction, action)
+			fmt.Printf("%s\n", action.Identifier)
 		} else {
 			for _, action := range conf.Actions {
-				listAction = append(listAction, action)
+				fmt.Printf("%s\n", action.Identifier)
 			}
-		}
-
-		for _, action := range listAction {
-			fmt.Printf("%s\n", action.Identifier)
 		}
 	},
 }
@@ -74,20 +66,22 @@ var actionRenameCmd = &cobra.Command{
 }
 
 var actionCreateCmd = &cobra.Command{
-	Use:   "create",
+	Use:   "create NAME USE ENV SECRETS",
 	Short: "Create new action",
 	Args:  cobra.MinimumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		u := model.UsesDockerImage{Image: args[1]}
+		name, use, env := args[0], args[1], args[2]
+
+		u := model.UsesDockerImage{Image: use}
 		uh := &u
 
-		env := make(map[string]string)
-		env[args[2]] = args[2]
+		envList := make(map[string]string)
+		envList[env] = env
 
-		ghaction := model.Action{Identifier: args[0], Uses: uh, Env: env}
+		ghaction := model.Action{Identifier: name, Uses: uh, Env: envList}
 
 		if len(args) == 4 {
-			ghaction.Secrets[0] = args[3]
+			ghaction.Secrets[0] = args[3] // secret
 		}
 
 		conf := parser.LoadData()
@@ -107,15 +101,16 @@ func removeResolver(slice []string, s int) []string {
 }
 
 var actionRemoveCmd = &cobra.Command{
-	Use:   "rm",
+	Use:   "rm NAME",
 	Short: "Remove actions",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		name := args[0]
 		conf := parser.LoadData()
 
 		var ia int
 		for k, action := range conf.Actions {
-			if action.Identifier == args[0] {
+			if action.Identifier == name {
 				ia = k
 			}
 		}
@@ -126,10 +121,11 @@ var actionRemoveCmd = &cobra.Command{
 		content, _ := printer.Encode(conf)
 		printer.Write(content)
 
+		// remove from workflow resolver the action
 		listWorkflow := make([]*model.Workflow, 0)
 		for _, workflow := range conf.Workflows {
 			for kr, resolver := range workflow.Resolves {
-				if resolver == args[0] {
+				if resolver == name {
 					workflow.Resolves = removeResolver(workflow.Resolves, kr)
 				}
 			}
@@ -147,8 +143,6 @@ var actionRemoveCmd = &cobra.Command{
 }
 
 func init() {
-	actionLsCmd.Flags().StringVarP(&Filter, "filter", "f", "", "Filter on")
-
 	actionCmd.AddCommand(actionLsCmd)
 	actionCmd.AddCommand(actionCreateCmd)
 	actionCmd.AddCommand(actionRenameCmd)

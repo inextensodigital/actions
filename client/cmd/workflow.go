@@ -10,6 +10,7 @@ import (
 )
 
 var Action string
+var Filter string
 
 var workflowCmd = &cobra.Command{
 	Use:   "workflow",
@@ -20,13 +21,18 @@ var workflowCmd = &cobra.Command{
 }
 
 var workflowLsCmd = &cobra.Command{
-	Use:   "ls",
-	Short: "List workflow",
+	Use:   "ls NAME",
+	Short: "List workflow by name or filtered on event",
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, workflow := range parser.LoadData().Workflows {
-			str := workflow.On
+		workflows := parser.LoadData().Workflows
+
+		if Filter != "" {
+			workflows = parser.LoadData().GetWorkflows(Filter)
+		}
+
+		for _, workflow := range workflows {
 			if len(args) >= 1 {
-				if args[0] == str {
+				if args[0] == workflow.Identifier {
 					fmt.Printf("%s\n", workflow.Identifier)
 				}
 			} else {
@@ -37,16 +43,18 @@ var workflowLsCmd = &cobra.Command{
 }
 
 var workflowCreateCmd = &cobra.Command{
-	Use:   "create",
+	Use:   "create NAME ON ACTION",
 	Short: "Create a new workflow",
 	Args:  cobra.MinimumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
+		name, on, action := args[0], args[1], args[2]
+
 		w := model.Workflow{
-			Identifier: args[0],
-			On:         args[1],
+			Identifier: name,
+			On:         on,
 		}
 
-		resolve := []string{args[2]}
+		resolve := []string{action}
 		w.Resolves = resolve
 
 		conf := parser.LoadData()
@@ -58,14 +66,16 @@ var workflowCreateCmd = &cobra.Command{
 }
 
 var workflowAddCmd = &cobra.Command{
-	Use:   "add",
+	Use:   "add NAME ACTION",
 	Short: "Add action to a workflow",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		conf := parser.LoadData()
-		workflow := conf.GetWorkflow(args[0])
+		name, action := args[0], args[1]
 
-		rs := args[1]
+		conf := parser.LoadData()
+		workflow := conf.GetWorkflow(name)
+
+		rs := action
 		workflow.Resolves = append(workflow.Resolves, rs)
 
 		content, _ := printer.Encode(conf)
@@ -74,14 +84,16 @@ var workflowAddCmd = &cobra.Command{
 }
 
 var workflowRenameCmd = &cobra.Command{
-	Use:   "rename",
+	Use:   "rename SOURCE TARGET",
 	Short: "Rename a workflow",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		conf := parser.LoadData()
-		workflow := conf.GetWorkflow(args[0])
+		source, target := args[0], args[1]
 
-		workflow.Identifier = args[1]
+		conf := parser.LoadData()
+		workflow := conf.GetWorkflow(source)
+
+		workflow.Identifier = target
 
 		content, _ := printer.Encode(conf)
 		printer.Write(content)

@@ -1,7 +1,6 @@
 package printer
 
 import (
-	// "fmt"
 	"io/ioutil"
 	"log"
 
