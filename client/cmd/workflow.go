@@ -11,7 +11,7 @@ import (
 )
 
 var Action string
-var Filter string
+var On string
 
 var workflowCmd = &cobra.Command{
 	Use:   "workflow",
@@ -27,8 +27,8 @@ var workflowLsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		workflows := parser.LoadData().Workflows
 
-		if Filter != "" {
-			workflows = parser.LoadData().GetWorkflows(Filter)
+		if On != "" {
+			workflows = parser.LoadData().GetWorkflows(On)
 		}
 
 		iW := 0
@@ -109,7 +109,7 @@ var workflowRenameCmd = &cobra.Command{
 }
 
 func init() {
-	workflowLsCmd.Flags().StringVarP(&Filter, "filter", "f", "", "Filter on")
+	workflowLsCmd.Flags().StringVarP(&On, "on", "o", "", "Filter on")
 	workflowAddCmd.Flags().StringVarP(&Action, "action", "a", "", "action")
 
 	workflowCmd.AddCommand(workflowLsCmd)

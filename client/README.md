@@ -6,7 +6,7 @@ Manage Github Action workflows and actions by cli. Allow you to script edition.
 - [x] github_workflow initialize
 - [x] github_workflow lint
 
-- [x] github_workflow workflow ls [name] --filter='on=="pull_request"'
+- [x] github_workflow workflow ls [name] --on="pull_request"
 - [x] github_workflow workflow create <name> <on> <action>
 - [x] github_workflow workflow add <name> <action>
 - [x] github_workflow workflow rename <old> <new>
@@ -29,7 +29,7 @@ github_workflow action ls "$action_image"
 github_workflow action create "$action_name" "$action_image" "GITHUB_TOKEN"
 
 
-if [ $workflow_name = $(github_worklow workflow ls --filter="pull_request" ] ; then
+if [ $workflow_name = $(github_worklow workflow ls --on="pull_request" ] ; then
     github_worklow workflow add "$workflow_name" "$action_name"
 else
      github_workflow workflow create "On pull request" "pull_request" "$action_name"
