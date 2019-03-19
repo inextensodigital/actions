@@ -23,19 +23,27 @@ var actionLsCmd = &cobra.Command{
 	Short: "List actions",
 	Run: func(cmd *cobra.Command, args []string) {
 		conf := parser.LoadData()
+
+		listAction := make([]*model.Action, 0)
+
 		if len(args) >= 1 {
 			action := conf.GetAction(args[0])
-			fmt.Printf("%s\n", action.Identifier)
+
+			listAction = append(listAction, action)
 		} else {
 			for _, action := range conf.Actions {
-				fmt.Printf("%s\n", action.Identifier)
+				listAction = append(listAction, action)
 			}
+		}
+
+		for _, action := range listAction {
+			fmt.Printf("%s\n", action.Identifier)
 		}
 	},
 }
 
 var actionRenameCmd = &cobra.Command{
-	Use:   "rename",
+	Use:   "rename SOURCE TARGET",
 	Short: "Rename action",
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {

@@ -5,8 +5,8 @@
 
 - [ ] github_workflow initialize
 - [x] github_workflow workflow ls [name] --filter='on=="pull_request"'
-- [x] github_workflow workflow create <name> <on> --action=
-- [x] github_workflow workflow add <name> --action=
+- [x] github_workflow workflow create <name> <on> <action>
+- [x] github_workflow workflow add <name> <action>
 - [x] # github_workflow workflow rename <old> <new>
 - [ ] # github_workflow workflow rm <name> --actions=true|false
 - [ ] # github_workflow workflow merge <name> --filter=
@@ -34,3 +34,9 @@ else
 
 fi
 ```
+
+
+Fixer arguments dans méthodes
+Plus de HELP et infos sur arguments
+Gestion code de sortie
+Rename workflow -> modifier resolve

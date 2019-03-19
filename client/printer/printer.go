@@ -19,7 +19,7 @@ type ActionPrinter struct {
 	Runs       []string          `hcl:"runs"`
 	Args       []string          `hcl:"args"`
 	Needs      []string          `hcl:"needs"`
-	Env        map[string]string `hcl:"env"`
+	Env        map[string]string `hcl:"env ="`
 	Secrets    []string          `hcl:"secrets"`
 }
 

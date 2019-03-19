@@ -16,7 +16,10 @@ func LoadData() *model.Configuration {
 		log.Fatalln(err)
 	}
 
-	data, _ := ghparser.Parse(r)
+	data, err := ghparser.Parse(r)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	return data
 }
