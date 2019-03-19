@@ -103,7 +103,7 @@ var workflowRenameCmd = &cobra.Command{
 func init() {
 	workflowLsCmd.Flags().StringVarP(&Filter, "filter", "f", "", "Filter on")
 	workflowAddCmd.Flags().StringVarP(&Action, "action", "a", "", "action")
-	workflowAddCmd.MarkFlagRequired("action")
+	// workflowAddCmd.MarkFlagRequired("action")
 
 	workflowCmd.AddCommand(workflowLsCmd)
 	workflowCmd.AddCommand(workflowAddCmd)
