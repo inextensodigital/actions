@@ -14,7 +14,7 @@ Manage Github Action workflows and actions by cli. Allow you to script edition.
 - [ ] github_workflow workflow merge <name> --filter=
 
 - [x] github_workflow action ls <name> --filter=""
-- [x] github_workflow action create <name> <uses> <env> <secrets>
+- [x] github_workflow action create <name> <uses> --env=foo=bar --env=bar=baz --secrets=FOO --secrets=BAR
 - [x] github_workflow action rename <old> <new>
 - [x] github_workflow action rm <name>
 

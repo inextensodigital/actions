@@ -11,7 +11,6 @@ import (
 )
 
 var Action string
-var On string
 
 var workflowCmd = &cobra.Command{
 	Use:   "workflow",

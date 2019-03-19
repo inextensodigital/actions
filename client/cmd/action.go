@@ -8,7 +8,12 @@ import (
 	"github.com/inextensodigital/actions/client/parser"
 	"github.com/inextensodigital/actions/client/printer"
 	"github.com/spf13/cobra"
+	"strings"
 )
+
+var On string
+var Env []string
+var Secrets []string
 
 var actionCmd = &cobra.Command{
 	Use:   "action",
@@ -76,21 +81,27 @@ var actionRenameCmd = &cobra.Command{
 var actionCreateCmd = &cobra.Command{
 	Use:   "create NAME USE ENV SECRETS",
 	Short: "Create new action",
-	Args:  cobra.MinimumNArgs(3),
+	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		name, use, env := args[0], args[1], args[2]
+		name, use := args[0], args[1]
 
 		u := model.UsesDockerImage{Image: use}
 		uh := &u
 
 		envList := make(map[string]string)
-		envList[env] = env
+		for _, v := range Env {
+			env := strings.SplitN(v, "=", 2)
+			if len(env) == 2 {
+				key, value := env[0], env[1]
+				envList[key] = value
+			} else {
+				fmt.Println("Invalid env %s", v)
+			}
+		}
 
 		ghaction := model.Action{Identifier: name, Uses: uh, Env: envList}
 
-		if len(args) == 4 {
-			ghaction.Secrets[0] = args[3] // secret
-		}
+		ghaction.Secrets = Secrets
 
 		conf := parser.LoadData()
 		conf.Actions = append(conf.Actions, &ghaction)
@@ -151,6 +162,9 @@ var actionRemoveCmd = &cobra.Command{
 }
 
 func init() {
+	actionLsCmd.Flags().StringArrayVarP(&Env, "env", "e", []string{}, "")
+	actionLsCmd.Flags().StringArrayVarP(&Secrets, "secrets", "s", []string{}, "")
+
 	actionCmd.AddCommand(actionLsCmd)
 	actionCmd.AddCommand(actionCreateCmd)
 	actionCmd.AddCommand(actionRenameCmd)
