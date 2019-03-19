@@ -8,8 +8,6 @@ github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NH
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/rodaine/hclencoder v0.0.0-20190213202847-fb9757bb536e h1:H9k4BAinsVIlHvkUQxmLq194u5Av7VofhxtPGBOAhAo=
-github.com/rodaine/hclencoder v0.0.0-20190213202847-fb9757bb536e/go.mod h1:hkWgI+PWPCjkVbx8rdk7GhVkpbc/zCLrY/9yF5xGSzI=
 github.com/soniakeys/bits v1.0.0 h1:Rune9VFefdJvLE0Q5iRCVGiKdSu2iDihs2I6SCm7evw=
 github.com/soniakeys/bits v1.0.0/go.mod h1:7yJHB//UizrUr64VFneewK6SX5oeCf0SMbDYe2ey1JA=
 github.com/soniakeys/graph v0.0.0 h1:C/Rr8rv9wbhZIsYHcWJFoI84pkipJocMYdRteE+/PQA=

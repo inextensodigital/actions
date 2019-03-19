@@ -1,76 +1,77 @@
 package printer
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
-	"log"
+	"strings"
 
 	"github.com/actions/workflow-parser/model"
-	"github.com/rodaine/hclencoder"
 )
-
-type ConfigurationPrinter struct {
-	Actions   []*ActionPrinter   `hcl:"action"`
-	Workflows []*WorkflowPrinter `hcl:"workflow"`
-}
-
-type ActionPrinter struct {
-	Identifier string            `hcl:",key"`
-	Uses       string            `hcl:"uses"`
-	Runs       []string          `hcl:"runs"`
-	Args       []string          `hcl:"args"`
-	Needs      []string          `hcl:"needs"`
-	Env        map[string]string `hcl:"env ="`
-	Secrets    []string          `hcl:"secrets"`
-}
-
-type WorkflowPrinter struct {
-	Identifier string   `hcl:",key"`
-	On         string   `hcl:"on"`
-	Resolves   []string `hcl:"resolves"`
-}
 
 // func Encode(in interface{}) ([]byte, error) {
 func Encode(in *model.Configuration) ([]byte, error) {
-	cp := ConfigurationPrinter{}
-
-	for _, action := range in.Actions {
-		var runs []string
-		var args []string
-		if action.Runs != nil {
-			runs = action.Runs.Split()
-		}
-		if action.Runs != nil {
-			args = action.Args.Split()
-		}
-
-		ap := ActionPrinter{
-			Identifier: action.Identifier,
-			Uses:       action.Uses.String(),
-			Runs:       runs,
-			Args:       args,
-			Needs:      action.Needs,
-			Env:        action.Env,
-			Secrets:    action.Secrets,
-		}
-
-		cp.Actions = append(cp.Actions, &ap)
-	}
+	b := &bytes.Buffer{}
 
 	for _, workflow := range in.Workflows {
-		wp := WorkflowPrinter{
-			Identifier: workflow.Identifier,
-			On:         workflow.On,
-			Resolves:   workflow.Resolves,
+		b.WriteString(
+			fmt.Sprintf("workflow \"%s\" {\n  on = \"%s\"\n",
+				workflow.Identifier,
+				workflow.On,
+			),
+		)
+
+		if len(workflow.Resolves) > 0 {
+			b.WriteString(
+				fmt.Sprintf("  resolves = [\n    \"%s\"\n  ]\n", strings.Join(workflow.Resolves, "\",\n    \"")),
+			)
 		}
-		cp.Workflows = append(cp.Workflows, &wp)
+		b.WriteString("}\n\n")
 	}
 
-	hcl, err := hclencoder.Encode(cp)
-	if err != nil {
-		log.Fatal("unable to encode: ", err)
+	for _, action := range in.Actions {
+		b.WriteString(
+			fmt.Sprintf("action \"%s\" {\n  uses = \"%s\"\n",
+				action.Identifier,
+				action.Uses.String(),
+			),
+		)
+
+		if len(action.Needs) > 0 {
+			b.WriteString(
+				fmt.Sprintf("  needs = [\n    \"%s\"\n  ]\n", strings.Join(action.Needs, "\",\n    \"")),
+			)
+		}
+
+		if action.Args != nil && len(action.Args.Split()) > 0 {
+			b.WriteString(
+				fmt.Sprintf("  args = \"%s\"\n", strings.Join(action.Args.Split(), " ")),
+			)
+		}
+
+		if len(action.Secrets) > 0 {
+			b.WriteString("  secrets = [\n")
+			for _, secret := range action.Secrets {
+				b.WriteString(
+					fmt.Sprintf("    \"%s\",\n", secret),
+				)
+			}
+			b.WriteString("  ]\n")
+		}
+
+		if len(action.Env) > 0 {
+			b.WriteString("  env = {\n")
+			for key, value := range action.Env {
+				b.WriteString(
+					fmt.Sprintf("    %s = \"%s\"\n", key, value),
+				)
+			}
+			b.WriteString("  }\n")
+		}
+		b.WriteString("}\n\n")
 	}
 
-	return hcl, err
+	return b.Bytes(), nil
 }
 
 func Write(c []byte) {
