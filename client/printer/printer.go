@@ -2,10 +2,11 @@ package printer
 
 import (
 	// "fmt"
-	"github.com/actions/workflow-parser/model"
-	"github.com/rodaine/hclencoder"
 	"io/ioutil"
 	"log"
+
+	"github.com/actions/workflow-parser/model"
+	"github.com/rodaine/hclencoder"
 )
 
 type ConfigurationPrinter struct {
@@ -19,7 +20,7 @@ type ActionPrinter struct {
 	Runs       []string          `hcl:"runs"`
 	Args       []string          `hcl:"args"`
 	Needs      []string          `hcl:"needs"`
-	Env        map[string]string `hcl:"env"`
+	Env        map[string]string `hcl:"env ="`
 	Secrets    []string          `hcl:"secrets"`
 }
 
