@@ -45,12 +45,26 @@ var actionLsCmd = &cobra.Command{
 var actionRenameCmd = &cobra.Command{
 	Use:   "rename SOURCE TARGET",
 	Short: "Rename action",
-	Args:  cobra.MinimumNArgs(2),
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		source, target := args[0], args[1]
 		conf := parser.LoadData()
 		for _, action := range conf.Actions {
-			if args[0] == action.Identifier {
-				action.Identifier = args[1]
+			for index, need := range action.Needs {
+				if need == source {
+					action.Needs[index] = target
+				}
+			}
+			if source == action.Identifier {
+				action.Identifier = target
+			}
+		}
+
+		for _, workflow := range conf.Workflows {
+			for index, resolve := range workflow.Resolves {
+				if resolve == source {
+					workflow.Resolves[index] = target
+				}
 			}
 		}
 

@@ -1,11 +1,12 @@
 package parser
 
 import (
-	"github.com/actions/workflow-parser/model"
-	ghparser "github.com/actions/workflow-parser/parser"
 	"io"
 	"log"
 	"os"
+
+	"github.com/actions/workflow-parser/model"
+	ghparser "github.com/actions/workflow-parser/parser"
 )
 
 func LoadData() *model.Configuration {

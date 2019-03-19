@@ -2,10 +2,11 @@ package printer
 
 import (
 	// "fmt"
-	"github.com/actions/workflow-parser/model"
-	"github.com/rodaine/hclencoder"
 	"io/ioutil"
 	"log"
+
+	"github.com/actions/workflow-parser/model"
+	"github.com/rodaine/hclencoder"
 )
 
 type ConfigurationPrinter struct {
