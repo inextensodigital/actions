@@ -1,11 +1,9 @@
 package main
 
 import (
-	"github.com/inextensodigital/actions/client/cmd"
-	"os"
+	"github.com/inextensodigital/actions/github-workflow/cmd"
 )
 
 func main() {
 	cmd.Execute()
-	os.Exit(0)
 }

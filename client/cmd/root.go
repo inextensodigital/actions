@@ -3,16 +3,20 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
-	"github.com/inextensodigital/actions/client/parser"
+	"github.com/inextensodigital/actions/github-workflow/parser"
 	"github.com/spf13/cobra"
 )
 
 var cfgFile string
 
+// GithubWorkflowPath Github workflow file path
+const GithubWorkflowPath = ".github/main.workflow"
+
 var rootCmd = &cobra.Command{
-	Use:   "client",
-	Short: "Command your github action in a cli",
+	Use:   "github-workflow",
+	Short: "Manage Github Action workflows and actions by cli. Allows you to script edition.",
 	Long:  ``,
 }
 
@@ -21,7 +25,7 @@ var lintCmd = &cobra.Command{
 	Short: "Check file integrity",
 	Run: func(cmd *cobra.Command, args []string) {
 		parser.LoadData()
-		fmt.Println("Configuration ok")
+		fmt.Println("Configuration 👌")
 	},
 }
 
@@ -29,16 +33,24 @@ var initCmd = &cobra.Command{
 	Use:   "initialize",
 	Short: "Initialize file integrity",
 	Run: func(cmd *cobra.Command, args []string) {
-		if _, err := os.Stat(".github/main.workflow"); os.IsNotExist(err) {
-			emptyFile, err := os.Create(".github/main.workflow")
+		if _, err := os.Stat(GithubWorkflowPath); os.IsNotExist(err) {
+			dir := filepath.Dir(GithubWorkflowPath)
+			err := os.MkdirAll(dir, 0755)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
+			}
+			emptyFile, err := os.Create(GithubWorkflowPath)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
 			}
 			emptyFile.Close()
 		}
 	},
 }
 
+// Execute main cmd function
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -47,12 +59,6 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 	rootCmd.AddCommand(lintCmd)
 	rootCmd.AddCommand(initCmd)
-}
-
-func initConfig() {
 }
