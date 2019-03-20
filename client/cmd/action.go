@@ -114,7 +114,7 @@ var actionCreateCmd = &cobra.Command{
 		u := model.UsesDockerImage{Image: use}
 		uh := &u
 
-		envList := make(map[string]string, 0)
+		envList := make(map[string]string)
 		for _, v := range Env {
 			env := strings.SplitN(v, "=", 2)
 			if len(env) != 2 {

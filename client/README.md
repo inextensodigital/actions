@@ -20,21 +20,26 @@ Manage Github Action workflows and actions by cli. Allows you to script edition.
 
 ### Example for creating a new action on "pull_request"
 
-```
+```shell
+#!/usr/bin/env bash
 action_name="Auto create master → dev PRs"
 action_image="inextensodigital/actions/create-pull-request@master"
-
-github-workflow initialize
-github-workflow action create "$action_name" "$action_image" --secret=GITHUB_TOKEN
-
+unified_workflow_name="On pull request"
 set -e
 set -o pipefail
+
+github-workflow initialize || echo "Already initialized ✓"
+github-workflow action ls "$action_name" &> /dev/null || github-workflow action create "$action_name" "$action_image" --secret=GITHUB_TOKEN
+
 workflow_name=$(github-workflow workflow ls --on="pull_request" | head -n 1) && \
     ( \
         github-workflow workflow add "$workflow_name" --resolve "$action_name" && \
-        github-workflow workflow rename "$workflow_name" "On pull request" \
+        github-workflow workflow rename "$workflow_name" "$unified_workflow_name" \
     ) \
 || \
-     github-workflow workflow create "On pull request" "pull_request" --resolve="$action_name" && \
+    (
+        github-workflow workflow ls "$unified_workflow_name" --on="pull_request" &> /dev/null || \
+        github-workflow workflow create "$unified_workflow_name" "pull_request" --resolve="$action_name" \
+    ) && \
 github-workflow lint
 ```
